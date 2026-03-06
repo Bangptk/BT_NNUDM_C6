@@ -3,7 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
 
+// 1. KẾT NỐI DATABASE
+mongoose.connect('mongodb://localhost:27017/AssignmentDB')
+  .then(() => console.log("✅ MongoDB đã kết nối thành công!"))
+  .catch(err => console.error("❌ Lỗi kết nối DB:", err));
 
 var app = express();
 
@@ -17,14 +22,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//domain:port/api/v1/products
-//domain:port/api/v1/users
-//domain:port/api/v1/categories
-//domain:port/api/v1/roles
-
+// 2. KHAI BÁO CÁC ROUTES
+// Lưu ý: Đảm bảo bạn đã tạo các file tương ứng trong thư mục /routes
 app.use('/', require('./routes/index'));
 app.use('/api/v1/users', require('./routes/users'));
-app.use('/api/v1/products', require('./routes/products'))
+app.use('/api/v1/products', require('./routes/products'));
+app.use('/api/v1/roles', require('./routes/roles')); // Thêm route cho roles
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
